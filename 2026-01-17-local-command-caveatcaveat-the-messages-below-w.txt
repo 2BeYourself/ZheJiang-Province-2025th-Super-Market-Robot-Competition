@@ -1,0 +1,24 @@
+
+ ▐▛███▜▌   Claude Code v2.1.9
+▝▜█████▛▘  Sonnet 4.5 · API Usage Billing
+  ▘▘ ▝▝    E:\RT-ThreadStudio\workspace\RTT-Robotic-Project-main\RTT-Roboti…
+
+
+ ⚠Auth conflict: Both a token (ANTHROPIC_AUTH_TOKEN) and an API key (/login 
+  managed key) are set. This may lead to unexpected behavior.
+    • Trying to use ANTHROPIC_AUTH_TOKEN? claude /logout
+    • Trying to use /login managed key? Unset the ANTHROPIC_AUTH_TOKEN 
+    environment variable.
+  /model to try Opus 4.5
+══════════════════ Conversation compacted · ctrl+o for history ═════════════════
+
+❯ /compact 
+  ⎿  Compacted (ctrl+o to see full summary)
+  ⎿  Read Kconfig (33 lines)
+  ⎿  Read applications\main.c (89 lines)
+  ⎿  Read applications\SConscript (13 lines)
+  ⎿  Referenced file PROJECT_README.md
+  ⎿  Read rtconfig.py (34 lines)
+
+
+

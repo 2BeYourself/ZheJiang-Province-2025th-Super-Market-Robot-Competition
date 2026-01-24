@@ -1,0 +1,43 @@
+# Build outputs
+build/
+Debug/
+Release/
+*.o
+*.elf
+*.bin
+*.hex
+*.map
+*.d
+
+# RT-Thread build files
+.sconsign.dblite
+rtconfig.h
+cconfig.h
+rtconfig.pyc
+makefile.targets
+
+# IDE
+.settings/
+.metadata/
+.recommenders/
+*.launch
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# VSCode
+.vscode/
+
+# Claude
+.claude/
+
+# Logs
+*.log
+Debug.txt
+
+# Temporary files
+*.swp
+*~
+.DS_Store

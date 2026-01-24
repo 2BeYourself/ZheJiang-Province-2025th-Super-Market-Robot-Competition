@@ -1,0 +1,14 @@
+Import('SRC')
+
+
+SRC += [
+	'main.c',
+	'bluetooth_test.c',   # 蓝牙测试命令
+	'uart_fast.c',         # UART快速刷新（可选）
+	# 底层驱动模块
+    'motor/motor_cmd.c',
+    'motor/motor_motion.c',
+    'motor/motor_state.c',
+    'swtich/switch_evt.c',
+    'task/task_state.c'
+]
