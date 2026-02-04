@@ -1,0 +1,237 @@
+# RTT-Robotic-Project
+
+> 基于 RT-Thread RTOS 的智能机器人竞赛项目 - 超市机器人挑战赛
+
+[![RT-Thread](https://img.shields.io/badge/RT--Thread-4.1.1-blue)](https://www.rt-thread.io/)
+[![STM32](https://img.shields.io/badge/STM32-F103ZET6-green)](https://www.st.com/resource/en/datasheet/stm32f103zet6.pdf)
+[![License](https://img.shields.io/badge/License-Apache%202.0-yellow.svg)](LICENSE)
+
+---
+
+## 项目简介
+
+本项目是为参加**创新机器人制作竞赛 - 超市机器人挑战赛**而开发的嵌入式机器人控制系统。机器人需要在超市模拟环境中自主完成物品识别、抓取、配送等任务。
+
+### 核心功能
+
+- 🤖 **四轮独立驱动** - 闭环步进电机精确控制
+- 🦾 **三自由度机械臂** - 总线舵机控制抓取系统
+- 🧭 **九轴姿态融合** - HWT101陀螺仪实时导航
+- 👁️ **视觉识别系统** - YOLO目标检测与定位
+- 📡 **多传感器融合** - 超声波+编码器+IMU
+- ⏱️ **比赛流程控制** - 状态机管理6分钟赛程
+- 🔄 **一键重启功能** - 10秒等待恢复机制
+
+---
+
+## 硬件配置
+
+| 组件 | 型号 | 说明 |
+|------|------|------|
+| **MCU** | STM32F103ZET6 | Cortex-M3, 72MHz, 512KB Flash, 64KB RAM |
+| **RTOS** | RT-Thread 4.1.1 | 实时操作系统 |
+| **步进驱动器** | Emm25 V5.0 ×4 | UART4 (115200) |
+| **总线舵机** | LX-16A ×3 | UART3 (115200) |
+| **陀螺仪** | HWT101 | UART2 (9600/115200) |
+| **超声波** | HC-SR04 ×N | GPIO |
+| **视觉模块** | YOLO | UART |
+
+---
+
+## 快速开始
+
+### 环境要求
+
+- RT-Thread Studio (推荐) / Keil MDK-ARM / GCC ARM Embedded
+- J-Link / ST-Link V2 / DAPLink 烧录器
+- 串口调试工具 (115200, 8N1)
+
+### 编译步骤
+
+#### 使用 RT-Thread Studio
+
+```bash
+# 1. 打开项目
+File -> Open Projects from File System -> 选择项目目录
+
+# 2. 编译项目
+Project -> Build Project (Ctrl+B)
+
+# 3. 下载到板子
+Project -> Download (F11)
+```
+
+#### 使用命令行 (SCons)
+
+```bash
+# 配置编译参数
+scons --menuconfig
+
+# 编译
+scons
+
+# 清理
+scons -c
+```
+
+---
+
+## 项目结构
+
+```
+RTT-Robotic-Project/
+├── applications/              # 应用层代码
+│   ├── arm/                  # 机械臂控制
+│   ├── motor/                # 电机控制
+│   ├── gyro/                 # 陀螺仪模块
+│   ├── task/                 # 任务模块
+│   ├── competition/          # 比赛控制
+│   ├── yolo_comm/            # 视觉通信
+│   ├── ultrasonic_ver2.0/    # 超声波模块
+│   └── PID/                  # PID算法
+├── drivers/                  # BSP驱动层
+├── libraries/                # STM32 HAL库
+├── rt-thread/                # RT-Thread内核
+├── 说明书/                   # 硬件协议文档
+└── README.md                 # 本文档
+```
+
+---
+
+## 功能模块
+
+### 比赛控制模块
+管理比赛全流程状态机（空闲 → 启动等待 → 运行中 → 重启等待 → 结束）
+
+### 电机控制模块
+四轮步进电机闭环控制，支持前进、后退、左转、右转等运动状态
+
+### 机械臂控制模块
+3自由度机械臂抓取系统（旋转台、伸展臂、抓爪）
+
+### 陀螺仪模块
+9轴姿态融合（加速度+陀螺+磁力计），提供实时欧拉角数据
+
+### 任务模块
+货架抓取任务状态机，实现物品识别、抓取、放置等流程
+
+---
+
+## 比赛任务流程
+
+```
+启动区 → 导航到货架 → 识别物品 → 抓取物品(×4) →
+运送配送区 → 精准投放 → 返回充电区
+```
+
+**得分规则**：
+- 成功抓取+投放1件：+50分
+- 完美返回充电区：+30分
+- 总分上限：230分
+
+---
+
+## 文档说明
+
+| 文档 | 说明 |
+|------|------|
+| [PROJECT_README.md](./PROJECT_README.md) | 详细项目文档（架构、协议、API等） |
+| [CLAUDE.md](./CLAUDE.md) | Claude Code 开发指南 |
+| 说明书/ | 硬件协议文档 |
+
+---
+
+## 硬件协议
+
+### Emm25 V5.0 步进驱动器
+- **接口**: UART4, 115200, 8N1
+- **常用命令**: 0xA2(速度闭环), 0xFD(位置模式), 0xA8(回零)
+
+### LX-16A 总线舵机
+- **接口**: UART3, 115200, 8N1
+- **指令格式**: 0x55 | ID | Len | Cmd | Params | SUM
+
+### HWT101 陀螺仪
+- **接口**: UART2, 9600/115200
+- **输出**: 加速度、角速度、欧拉角、磁场
+
+---
+
+## 技术栈
+
+- **嵌入式**: STM32 + RT-Thread RTOS
+- **传感器**: IMU + 超声波 + 视觉 + 编码器
+- **控制算法**: PID + 状态机
+- **通信**: 多UART并发 (UART1-5)
+
+---
+
+## 项目特点
+
+- ✨ 模块化设计，各功能独立解耦
+- 🔄 状态机架构，清晰的任务流程控制
+- ⚡ RTOS多线程，实时性保障
+- 📊 传感器融合，多源数据整合
+- 🎯 闭环控制，PID算法+步进闭环驱动
+- 🛡️ 错误恢复，重启机制+超时保护
+
+---
+
+## 开发调试
+
+### FinSH 命令行
+
+通过 UART1 串口 (115200) 连接 FinSH 控制台：
+
+```bash
+list_thread()     # 列出所有线程
+list_sem()        # 列出信号量
+ps()              # 进程状态
+free()            # 内存使用
+```
+
+### 常用工具
+
+- J-Link / ST-Link 用于烧录和调试
+- 串口调试助手用于日志查看
+- 逻辑分析仪用于协议分析
+
+---
+
+## 开发团队
+
+- **竞赛**: 创新机器人制作竞赛 - 超市机器人挑战赛
+- **版本**: v1.0
+- **最后更新**: 2025-01-16
+
+---
+
+## 许可证
+
+```
+Copyright (c) 2006-2025, RT-Thread Development Team
+
+SPDX-License-Identifier: Apache-2.0
+```
+
+---
+
+## 相关链接
+
+- [RT-Thread 官方文档](https://www.rt-thread.io/document/)
+- [STM32F103 参考手册](https://www.st.com/resource/en/reference_manual/cd00171190.pdf)
+- [详细项目文档](./PROJECT_README.md)
+
+---
+
+## 问题反馈
+
+如有问题或建议，请提交 Issue 或参考 [详细文档](./PROJECT_README.md)。
+
+---
+
+<div align="center">
+
+**Made with ❤️ for RT-Thread Robot Competition**
+
+</div>
